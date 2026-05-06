@@ -164,3 +164,13 @@
 
   --ds-color-focus-ring: var(--ds-palette-white);
 }
+
+/* ------------------------------------------------------------------
+   Base application styles driven by theme tokens
+   ------------------------------------------------------------------ */
+html,
+body {
+  background-color: var(--ds-color-bg);
+  color: var(--ds-color-text);
+  font-family: var(--ds-font-sans);
+}
