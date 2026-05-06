@@ -1,0 +1,132 @@
+/* ==========================================================================
+   Design System — Primitive Tokens
+   These are raw values. Never use them directly in components.
+   Components must reference semantic tokens from themes.css.
+   ========================================================================== */
+
+:root {
+  /* --------------------------------------------------------------------
+     Palette
+     -------------------------------------------------------------------- */
+
+  /* Neutral */
+  --ds-palette-white: #ffffff;
+  --ds-palette-black: #000000;
+  --ds-palette-gray-50: #fafafa;
+  --ds-palette-gray-100: #f4f4f5;
+  --ds-palette-gray-200: #e4e4e7;
+  --ds-palette-gray-300: #d4d4d8;
+  --ds-palette-gray-400: #a1a1aa;
+  --ds-palette-gray-500: #71717a;
+  --ds-palette-gray-600: #52525b;
+  --ds-palette-gray-700: #3f3f46;
+  --ds-palette-gray-800: #27272a;
+  --ds-palette-gray-900: #18181b;
+  --ds-palette-gray-950: #09090b;
+
+  /* Blue */
+  --ds-palette-blue-50: #eff6ff;
+  --ds-palette-blue-100: #dbeafe;
+  --ds-palette-blue-200: #bfdbfe;
+  --ds-palette-blue-300: #93c5fd;
+  --ds-palette-blue-400: #60a5fa;
+  --ds-palette-blue-500: #3b82f6;
+  --ds-palette-blue-600: #2563eb;
+  --ds-palette-blue-700: #1d4ed8;
+  --ds-palette-blue-800: #1e40af;
+  --ds-palette-blue-900: #1e3a8a;
+
+  /* Red */
+  --ds-palette-red-50: #fef2f2;
+  --ds-palette-red-100: #fee2e2;
+  --ds-palette-red-200: #fecaca;
+  --ds-palette-red-300: #fca5a5;
+  --ds-palette-red-400: #f87171;
+  --ds-palette-red-500: #ef4444;
+  --ds-palette-red-600: #dc2626;
+  --ds-palette-red-700: #b91c1c;
+  --ds-palette-red-800: #991b1b;
+  --ds-palette-red-900: #7f1d1d;
+
+  /* Green */
+  --ds-palette-green-50: #f0fdf4;
+  --ds-palette-green-100: #dcfce7;
+  --ds-palette-green-200: #bbf7d0;
+  --ds-palette-green-300: #86efac;
+  --ds-palette-green-400: #4ade80;
+  --ds-palette-green-500: #22c55e;
+  --ds-palette-green-600: #16a34a;
+  --ds-palette-green-700: #15803d;
+  --ds-palette-green-800: #166534;
+  --ds-palette-green-900: #14532d;
+
+  /* Amber */
+  --ds-palette-amber-50: #fffbeb;
+  --ds-palette-amber-100: #fef3c7;
+  --ds-palette-amber-200: #fde68a;
+  --ds-palette-amber-300: #fcd34d;
+  --ds-palette-amber-400: #fbbf24;
+  --ds-palette-amber-500: #f59e0b;
+  --ds-palette-amber-600: #d97706;
+  --ds-palette-amber-700: #b45309;
+  --ds-palette-amber-800: #92400e;
+  --ds-palette-amber-900: #78350f;
+
+  /* --------------------------------------------------------------------
+     Spacing (4px base grid)
+     -------------------------------------------------------------------- */
+  --ds-spacing-0: 0;
+  --ds-spacing-1: 0.25rem; /* 4px */
+  --ds-spacing-2: 0.5rem; /* 8px */
+  --ds-spacing-3: 0.75rem; /* 12px */
+  --ds-spacing-4: 1rem; /* 16px */
+  --ds-spacing-5: 1.25rem; /* 20px */
+  --ds-spacing-6: 1.5rem; /* 24px */
+  --ds-spacing-8: 2rem; /* 32px */
+  --ds-spacing-10: 2.5rem; /* 40px */
+  --ds-spacing-12: 3rem; /* 48px */
+  --ds-spacing-16: 4rem; /* 64px */
+  --ds-spacing-20: 5rem; /* 80px */
+  --ds-spacing-24: 6rem; /* 96px */
+
+  /* --------------------------------------------------------------------
+     Typography
+     -------------------------------------------------------------------- */
+  --ds-font-sans: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --ds-font-mono: ui-monospace, 'Cascadia Code', 'Fira Code', monospace;
+
+  --ds-font-size-xs: 0.75rem; /* 12px */
+  --ds-font-size-sm: 0.875rem; /* 14px */
+  --ds-font-size-base: 1rem; /* 16px */
+  --ds-font-size-lg: 1.125rem; /* 18px */
+  --ds-font-size-xl: 1.25rem; /* 20px */
+  --ds-font-size-2xl: 1.5rem; /* 24px */
+  --ds-font-size-3xl: 1.875rem; /* 30px */
+
+  --ds-font-weight-regular: 400;
+  --ds-font-weight-medium: 500;
+  --ds-font-weight-semibold: 600;
+  --ds-font-weight-bold: 700;
+
+  --ds-line-height-tight: 1.25;
+  --ds-line-height-normal: 1.5;
+  --ds-line-height-relaxed: 1.75;
+
+  /* --------------------------------------------------------------------
+     Radii
+     -------------------------------------------------------------------- */
+  --ds-radius-none: 0;
+  --ds-radius-sm: 0.125rem; /* 2px */
+  --ds-radius-md: 0.25rem; /* 4px */
+  --ds-radius-lg: 0.5rem; /* 8px */
+  --ds-radius-xl: 0.75rem; /* 12px */
+  --ds-radius-2xl: 1rem; /* 16px */
+  --ds-radius-full: 9999px;
+
+  /* --------------------------------------------------------------------
+     Shadows
+     -------------------------------------------------------------------- */
+  --ds-shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --ds-shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --ds-shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+}

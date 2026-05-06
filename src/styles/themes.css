@@ -1,0 +1,166 @@
+/* ==========================================================================
+   Design System — Semantic Tokens (Themes)
+   Components reference ONLY these variables: var(--ds-color-*)
+   Theme switching: set data-theme="<name>" on <html> or any ancestor.
+   ========================================================================== */
+
+/* ------------------------------------------------------------------
+   DEFAULT — professional dark-blue tone
+   ------------------------------------------------------------------ */
+[data-theme='default'],
+:root {
+  --ds-color-bg: var(--ds-palette-gray-950);
+  --ds-color-bg-subtle: var(--ds-palette-gray-900);
+  --ds-color-bg-muted: var(--ds-palette-gray-800);
+
+  --ds-color-surface: var(--ds-palette-gray-900);
+  --ds-color-surface-raised: var(--ds-palette-gray-800);
+
+  --ds-color-border: var(--ds-palette-gray-700);
+  --ds-color-border-muted: var(--ds-palette-gray-800);
+
+  --ds-color-text: var(--ds-palette-white);
+  --ds-color-text-muted: var(--ds-palette-gray-400);
+  --ds-color-text-subtle: var(--ds-palette-gray-500);
+
+  --ds-color-primary: var(--ds-palette-blue-500);
+  --ds-color-primary-hover: var(--ds-palette-blue-600);
+  --ds-color-primary-active: var(--ds-palette-blue-700);
+  --ds-color-primary-text: var(--ds-palette-white);
+
+  --ds-color-secondary: var(--ds-palette-gray-700);
+  --ds-color-secondary-hover: var(--ds-palette-gray-600);
+  --ds-color-secondary-active: var(--ds-palette-gray-500);
+  --ds-color-secondary-text: var(--ds-palette-gray-100);
+
+  --ds-color-destructive: var(--ds-palette-red-600);
+  --ds-color-destructive-hover: var(--ds-palette-red-700);
+  --ds-color-destructive-active: var(--ds-palette-red-800);
+  --ds-color-destructive-text: var(--ds-palette-white);
+
+  --ds-color-success: var(--ds-palette-green-500);
+  --ds-color-warning: var(--ds-palette-amber-500);
+  --ds-color-danger: var(--ds-palette-red-500);
+
+  --ds-color-focus-ring: var(--ds-palette-blue-400);
+}
+
+/* ------------------------------------------------------------------
+   DARK — neutral true-dark
+   ------------------------------------------------------------------ */
+[data-theme='dark'] {
+  --ds-color-bg: var(--ds-palette-black);
+  --ds-color-bg-subtle: var(--ds-palette-gray-950);
+  --ds-color-bg-muted: var(--ds-palette-gray-900);
+
+  --ds-color-surface: var(--ds-palette-gray-950);
+  --ds-color-surface-raised: var(--ds-palette-gray-900);
+
+  --ds-color-border: var(--ds-palette-gray-800);
+  --ds-color-border-muted: var(--ds-palette-gray-900);
+
+  --ds-color-text: var(--ds-palette-gray-100);
+  --ds-color-text-muted: var(--ds-palette-gray-400);
+  --ds-color-text-subtle: var(--ds-palette-gray-600);
+
+  --ds-color-primary: var(--ds-palette-blue-400);
+  --ds-color-primary-hover: var(--ds-palette-blue-500);
+  --ds-color-primary-active: var(--ds-palette-blue-600);
+  --ds-color-primary-text: var(--ds-palette-gray-950);
+
+  --ds-color-secondary: var(--ds-palette-gray-800);
+  --ds-color-secondary-hover: var(--ds-palette-gray-700);
+  --ds-color-secondary-active: var(--ds-palette-gray-600);
+  --ds-color-secondary-text: var(--ds-palette-gray-100);
+
+  --ds-color-destructive: var(--ds-palette-red-500);
+  --ds-color-destructive-hover: var(--ds-palette-red-600);
+  --ds-color-destructive-active: var(--ds-palette-red-700);
+  --ds-color-destructive-text: var(--ds-palette-white);
+
+  --ds-color-success: var(--ds-palette-green-400);
+  --ds-color-warning: var(--ds-palette-amber-400);
+  --ds-color-danger: var(--ds-palette-red-400);
+
+  --ds-color-focus-ring: var(--ds-palette-blue-300);
+}
+
+/* ------------------------------------------------------------------
+   DARK-RED — dark with red/crimson accent
+   ------------------------------------------------------------------ */
+[data-theme='dark-red'] {
+  --ds-color-bg: #1a0a0a;
+  --ds-color-bg-subtle: #2a1010;
+  --ds-color-bg-muted: #3d1515;
+
+  --ds-color-surface: #2a1010;
+  --ds-color-surface-raised: #3d1515;
+
+  --ds-color-border: #5c2020;
+  --ds-color-border-muted: #3d1515;
+
+  --ds-color-text: var(--ds-palette-white);
+  --ds-color-text-muted: var(--ds-palette-red-200);
+  --ds-color-text-subtle: var(--ds-palette-red-300);
+
+  --ds-color-primary: var(--ds-palette-red-500);
+  --ds-color-primary-hover: var(--ds-palette-red-600);
+  --ds-color-primary-active: var(--ds-palette-red-700);
+  --ds-color-primary-text: var(--ds-palette-white);
+
+  --ds-color-secondary: #5c2020;
+  --ds-color-secondary-hover: #7a2a2a;
+  --ds-color-secondary-active: #943333;
+  --ds-color-secondary-text: var(--ds-palette-red-100);
+
+  --ds-color-destructive: var(--ds-palette-amber-500);
+  --ds-color-destructive-hover: var(--ds-palette-amber-600);
+  --ds-color-destructive-active: var(--ds-palette-amber-700);
+  --ds-color-destructive-text: var(--ds-palette-white);
+
+  --ds-color-success: var(--ds-palette-green-400);
+  --ds-color-warning: var(--ds-palette-amber-400);
+  --ds-color-danger: var(--ds-palette-red-400);
+
+  --ds-color-focus-ring: var(--ds-palette-red-400);
+}
+
+/* ------------------------------------------------------------------
+   WHITE-ON-BLACK — high contrast accessibility theme
+   ------------------------------------------------------------------ */
+[data-theme='white-on-black'] {
+  --ds-color-bg: var(--ds-palette-black);
+  --ds-color-bg-subtle: var(--ds-palette-black);
+  --ds-color-bg-muted: #111111;
+
+  --ds-color-surface: #111111;
+  --ds-color-surface-raised: #1a1a1a;
+
+  --ds-color-border: var(--ds-palette-white);
+  --ds-color-border-muted: var(--ds-palette-gray-300);
+
+  --ds-color-text: var(--ds-palette-white);
+  --ds-color-text-muted: var(--ds-palette-gray-200);
+  --ds-color-text-subtle: var(--ds-palette-gray-300);
+
+  --ds-color-primary: var(--ds-palette-white);
+  --ds-color-primary-hover: var(--ds-palette-gray-200);
+  --ds-color-primary-active: var(--ds-palette-gray-300);
+  --ds-color-primary-text: var(--ds-palette-black);
+
+  --ds-color-secondary: var(--ds-palette-black);
+  --ds-color-secondary-hover: #111111;
+  --ds-color-secondary-active: #1a1a1a;
+  --ds-color-secondary-text: var(--ds-palette-white);
+
+  --ds-color-destructive: var(--ds-palette-red-400);
+  --ds-color-destructive-hover: var(--ds-palette-red-500);
+  --ds-color-destructive-active: var(--ds-palette-red-600);
+  --ds-color-destructive-text: var(--ds-palette-black);
+
+  --ds-color-success: var(--ds-palette-green-300);
+  --ds-color-warning: var(--ds-palette-amber-300);
+  --ds-color-danger: var(--ds-palette-red-300);
+
+  --ds-color-focus-ring: var(--ds-palette-white);
+}
