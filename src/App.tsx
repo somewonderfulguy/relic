@@ -1,11 +1,11 @@
 import { Button } from '@/components'
 
-const themes = ['default', 'dark', 'dark-red', 'white-on-black'] as const
+const themes = ['yellow', 'dark', 'dark-red', 'white-on-black'] as const
 
 export const App = () => (
   <div>
     <select
-      defaultValue="default"
+      defaultValue="yellow"
       onChange={(e) => {
         document.documentElement.setAttribute('data-theme', e.target.value)
       }}

@@ -5,9 +5,9 @@
    ========================================================================== */
 
 /* ------------------------------------------------------------------
-   DEFAULT — professional dark-blue tone
+   YELLOW — professional dark-blue tone
    ------------------------------------------------------------------ */
-[data-theme='default'],
+[data-theme='yellow'],
 :root {
   --ds-color-bg: var(--ds-palette-gray-950);
   --ds-color-bg-subtle: var(--ds-palette-gray-900);

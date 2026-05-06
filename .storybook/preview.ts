@@ -24,12 +24,12 @@ const preview: Preview = {
   decorators: [
     withThemeByDataAttribute({
       themes: {
-        Default: 'default',
+        Yellow: 'yellow',
         Dark: 'dark',
         'Dark Red': 'dark-red',
         'White on Black': 'white-on-black',
       },
-      defaultTheme: 'Default',
+      defaultTheme: 'Yellow',
       attributeName: 'data-theme',
     }),
   ],

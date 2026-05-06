@@ -53,12 +53,6 @@ export const Destructive: Story = {
   },
 }
 
-export const Ghost: Story = {
-  args: {
-    variant: 'ghost',
-  },
-}
-
 export const Large: Story = {
   args: {
     size: 'large',
@@ -75,5 +69,13 @@ export const AsLink: Story = {
   args: {
     asChild: true,
     children: <a href="#">Link</a>,
+  },
+}
+
+export const Mobile: Story = {
+  parameters: {
+    viewport: {
+      defaultViewport: 'mobile1',
+    },
   },
 }

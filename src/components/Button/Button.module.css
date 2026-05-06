@@ -63,21 +63,6 @@
   }
 }
 
-.ghost {
-  background-color: transparent;
-  color: var(--ds-color-primary);
-  border-color: transparent;
-  box-shadow: none;
-
-  &:hover {
-    background-color: var(--ds-color-bg-muted);
-  }
-
-  &:active {
-    background-color: var(--ds-color-surface-raised);
-  }
-}
-
 .small {
   font-size: var(--ds-font-size-sm);
   padding: var(--ds-spacing-1) var(--ds-spacing-2);

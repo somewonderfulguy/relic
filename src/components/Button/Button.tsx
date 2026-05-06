@@ -3,13 +3,12 @@ import { Slot } from '@radix-ui/react-slot'
 
 import { cn } from '@/utils'
 
-import styles from './Button.module.css'
+import { buttonVariants, type ButtonVariants } from './Button.variants'
 
-export type ButtonProps = ComponentProps<'button'> & {
-  variant?: 'primary' | 'secondary' | 'destructive' | 'ghost'
-  size?: 'small' | 'medium' | 'large'
-  asChild?: boolean
-}
+export type ButtonProps = ComponentProps<'button'> &
+  ButtonVariants & {
+    asChild?: boolean
+  }
 
 export const Button = ({
   variant = 'primary',
@@ -21,7 +20,7 @@ export const Button = ({
   const Comp = asChild ? Slot : 'button'
   return (
     <Comp
-      className={cn(styles.button, styles[variant], styles[size], className)}
+      className={cn(buttonVariants({ variant, size }), className)}
       {...props}
     />
   )
