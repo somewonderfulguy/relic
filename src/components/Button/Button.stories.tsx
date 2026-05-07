@@ -3,9 +3,8 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 import { Button } from './Button'
 
 const meta: Meta = {
-  title: 'Components/Button',
+  title: 'Button',
   component: Button,
-  tags: ['autodocs'],
   args: {
     children: 'Button',
     variant: 'primary',
@@ -15,12 +14,14 @@ const meta: Meta = {
   argTypes: {
     variant: {
       control: 'select',
+      options: ['primary', 'secondary', 'destructive'],
       table: {
         defaultValue: { summary: 'primary' },
       },
     },
     size: {
       control: 'select',
+      options: ['small', 'medium', 'large'],
       table: {
         defaultValue: { summary: 'medium' },
       },
@@ -36,7 +37,6 @@ const meta: Meta = {
 }
 
 export default meta
-
 type Story = StoryObj<typeof Button>
 
 export const Primary: Story = {}

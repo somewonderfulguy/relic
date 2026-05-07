@@ -5,6 +5,11 @@ import '../src/styles'
 
 const preview: Preview = {
   parameters: {
+    options: {
+      storySort: {
+        order: ['Welcome', 'Theming', '*'],
+      },
+    },
     backgrounds: { disable: true },
 
     controls: {
