@@ -7,7 +7,19 @@ const meta: Meta = {
   title: 'Input',
   component: Input,
   args: {
+    type: 'text',
     disabled: false,
+  },
+  argTypes: {
+    type: {
+      control: 'select',
+      options: ['text', 'number', 'email', 'password', 'search', 'tel', 'url'],
+      table: {
+        type: {
+          summary: 'text | number | email | password | search | tel | url',
+        },
+      },
+    },
   },
 }
 
@@ -42,13 +54,25 @@ export const TypeNumberDecimal: Story = {
   },
 }
 
-/** `min`, `max`, and `step` are fully supported. When `min` is negative, the minus sign becomes typeable as the first character. `step` is honored by keyboard arrow keys even though the native spinner UI is suppressed. */
+/** `min`, `max`, and `step` are fully supported. Providing a negative `min` implicitly enables typing the minus sign as the first character. `step` is honored by keyboard arrow keys even though the native spinner UI is suppressed. */
 export const TypeNumberWithConstraints: Story = {
   args: {
     type: 'number',
     min: -100,
     max: 1200,
     step: 100,
+  },
+}
+
+/** When negative values should be accepted but no specific lower bound is needed, use `allowNegative` instead of a synthetic `min`. The minus sign becomes typeable as the first character.<br />
+ * This prop is exclusive to `type="number"` and is ignored on any other type at the TypeScript level.
+ */
+export const TypeNumberNegative: Story = {
+  args: {
+    type: 'number',
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    //@ts-expect-error
+    allowNegative: true,
   },
 }
 
