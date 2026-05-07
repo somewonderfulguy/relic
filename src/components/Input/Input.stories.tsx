@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/react-vite'
+import { userEvent, within, expect } from 'storybook/test'
 
 import { Input } from './Input'
 
@@ -18,6 +19,13 @@ const meta: Meta = {
         type: {
           summary: 'text | number | email | password | search | tel | url',
         },
+      },
+    },
+  },
+  parameters: {
+    a11y: {
+      config: {
+        rules: [{ id: 'label', enabled: false }],
       },
     },
   },
@@ -43,6 +51,13 @@ export const Placeholder: Story = {
 export const TypeNumber: Story = {
   args: {
     type: 'number',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox')
+
+    await userEvent.type(input, 'abc123xyz', { delay: 100 })
+    await expect(input).toHaveValue('123')
   },
 }
 

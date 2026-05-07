@@ -10,8 +10,5 @@ const config: StorybookConfig = {
     '@storybook/addon-themes',
   ],
   framework: '@storybook/react-vite',
-  core: {
-    disableTelemetry: true, // Used to ignore update notifications (better not to disable it in real projects)
-  },
 }
 export default config
