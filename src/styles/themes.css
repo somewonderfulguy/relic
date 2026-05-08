@@ -23,9 +23,9 @@
   --ds-color-text-muted: var(--ds-palette-gray-400);
   --ds-color-text-subtle: var(--ds-palette-gray-500);
 
-  --ds-color-primary: var(--ds-palette-blue-500);
-  --ds-color-primary-hover: var(--ds-palette-blue-600);
-  --ds-color-primary-active: var(--ds-palette-blue-700);
+  --ds-color-primary: var(--ds-palette-blue-600);
+  --ds-color-primary-hover: var(--ds-palette-blue-700);
+  --ds-color-primary-active: var(--ds-palette-blue-800);
   --ds-color-primary-text: var(--ds-palette-white);
 
   --ds-color-secondary: var(--ds-palette-gray-700);
@@ -76,7 +76,7 @@
   --ds-color-destructive: var(--ds-palette-red-500);
   --ds-color-destructive-hover: var(--ds-palette-red-600);
   --ds-color-destructive-active: var(--ds-palette-red-700);
-  --ds-color-destructive-text: var(--ds-palette-white);
+  --ds-color-destructive-text: var(--ds-palette-gray-950);
 
   --ds-color-success: var(--ds-palette-green-400);
   --ds-color-warning: var(--ds-palette-amber-400);
@@ -106,7 +106,7 @@
   --ds-color-primary: var(--ds-palette-red-500);
   --ds-color-primary-hover: var(--ds-palette-red-600);
   --ds-color-primary-active: var(--ds-palette-red-700);
-  --ds-color-primary-text: var(--ds-palette-white);
+  --ds-color-primary-text: var(--ds-palette-gray-950);
 
   --ds-color-secondary: #5c2020;
   --ds-color-secondary-hover: #7a2a2a;
@@ -116,7 +116,7 @@
   --ds-color-destructive: var(--ds-palette-amber-500);
   --ds-color-destructive-hover: var(--ds-palette-amber-600);
   --ds-color-destructive-active: var(--ds-palette-amber-700);
-  --ds-color-destructive-text: var(--ds-palette-white);
+  --ds-color-destructive-text: var(--ds-palette-gray-950);
 
   --ds-color-success: var(--ds-palette-green-400);
   --ds-color-warning: var(--ds-palette-amber-400);
