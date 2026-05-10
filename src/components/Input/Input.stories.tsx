@@ -80,14 +80,19 @@ export const TypeNumberWithConstraints: Story = {
 }
 
 /** When negative values should be accepted but no specific lower bound is needed, use `allowNegative` instead of a synthetic `min`. The minus sign becomes typeable as the first character.<br />
- * This prop is exclusive to `type="number"` and is ignored on any other type at the TypeScript level.
+ * This prop is exclusive to `type="number"` — TypeScript will reject it on any other type.
  */
 export const TypeNumberNegative: Story = {
   args: {
     type: 'number',
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    //@ts-expect-error
     allowNegative: true,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox')
+
+    await userEvent.type(input, '-42abc', { delay: 50 })
+    await expect(input).toHaveValue('-42')
   },
 }
 

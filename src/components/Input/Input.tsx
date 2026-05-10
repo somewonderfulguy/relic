@@ -4,12 +4,32 @@ import type { ComponentProps } from 'react'
 
 import { cn } from '@/utils'
 
-import { sanitizeNumericValue } from './utils'
+import { getNumericPattern, sanitizeNumericValue } from './utils'
 
-export type InputProps = ComponentProps<'input'>
+type NativeInputProps = ComponentProps<'input'>
 
-const getNumericPattern = (inputMode: InputProps['inputMode']) =>
-  inputMode === 'decimal' ? '[0-9]+([.,][0-9]+)?' : '[0-9]*'
+/**
+ * Props that only apply when `type="number"`.
+ * New number-only props should be added here — the non-numeric branch of
+ * `InputProps` excludes them automatically via a mapped type.
+ */
+type NumericOnlyProps = {
+  /**
+   * When `true`, permits typing a leading minus sign to produce a negative value.
+   * Redundant when a negative `min` is provided — a negative bound already enables negatives.
+   */
+  allowNegative?: boolean
+}
+
+type NumericInputProps = Omit<NativeInputProps, 'type'> & {
+  type: 'number'
+} & NumericOnlyProps
+
+type NonNumericInputProps = Omit<NativeInputProps, 'type'> & {
+  type?: Exclude<NativeInputProps['type'], 'number'>
+} & { [K in keyof NumericOnlyProps]?: never }
+
+export type InputProps = NumericInputProps | NonNumericInputProps
 
 export const Input = ({
   type = 'text',
@@ -17,12 +37,14 @@ export const Input = ({
   pattern,
   className,
   onChange,
+  allowNegative,
   ...props
 }: InputProps) => {
   const isNumberInput = type === 'number'
   const resolvedInputMode = isNumberInput ? (inputMode ?? 'numeric') : inputMode
   const resolvedPattern = isNumberInput
-    ? (pattern ?? getNumericPattern(resolvedInputMode))
+    ? (pattern ??
+      getNumericPattern({ inputMode: resolvedInputMode, allowNegative }))
     : pattern
 
   return (
@@ -35,7 +57,7 @@ export const Input = ({
         if (isNumberInput) {
           event.currentTarget.value = sanitizeNumericValue(
             event.currentTarget.value,
-            resolvedInputMode,
+            { inputMode: resolvedInputMode, allowNegative },
           )
         }
         onChange?.(event)

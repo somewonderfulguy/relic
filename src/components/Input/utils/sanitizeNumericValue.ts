@@ -1,21 +1,34 @@
 import type { ComponentProps } from 'react'
 
+export type SanitizeNumericValueOptions = {
+  inputMode: ComponentProps<'input'>['inputMode']
+  allowNegative?: boolean
+}
+
 export const sanitizeNumericValue = (
   value: string,
-  inputMode: ComponentProps<'input'>['inputMode'],
+  { inputMode, allowNegative }: SanitizeNumericValueOptions,
 ) => {
-  if (inputMode === 'decimal') {
-    const numericValue = value.replace(/[^\d.,]/g, '')
-    const separator = numericValue.match(/[.,]/)?.[0]
+  const isNegative = allowNegative === true && value.startsWith('-')
+  const unsigned = value.replace(/-/g, '')
 
-    if (!separator) {
-      return numericValue
-    }
+  const cleaned =
+    inputMode === 'decimal'
+      ? sanitizeDecimal(unsigned)
+      : unsigned.replace(/\D/g, '')
 
-    const [integerPart = '', ...decimalParts] = numericValue.split(/[.,]/)
+  return isNegative ? `-${cleaned}` : cleaned
+}
 
-    return `${integerPart}${separator}${decimalParts.join('')}`
+const sanitizeDecimal = (value: string) => {
+  const numericValue = value.replace(/[^\d.,]/g, '')
+  const separator = numericValue.match(/[.,]/)?.[0]
+
+  if (!separator) {
+    return numericValue
   }
 
-  return value.replace(/\D/g, '')
+  const [integerPart = '', ...decimalParts] = numericValue.split(/[.,]/)
+
+  return `${integerPart}${separator}${decimalParts.join('')}`
 }
