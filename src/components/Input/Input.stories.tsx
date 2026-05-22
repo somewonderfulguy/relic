@@ -77,6 +77,23 @@ export const TypeNumberWithConstraints: Story = {
     max: 1200,
     step: 100,
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox')
+
+    await userEvent.click(input)
+    await userEvent.keyboard('{ArrowUp}')
+    await expect(input).toHaveValue('100')
+
+    await userEvent.keyboard('{PageDown}')
+    await expect(input).toHaveValue('-100')
+
+    await userEvent.keyboard('{End}')
+    await expect(input).toHaveValue('1200')
+
+    await userEvent.keyboard('{Home}')
+    await expect(input).toHaveValue('-100')
+  },
 }
 
 /** When negative values should be accepted but no specific lower bound is needed, use `allowNegative` instead of a synthetic `min`. The minus sign becomes typeable as the first character.<br />

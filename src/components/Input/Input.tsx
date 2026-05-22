@@ -4,7 +4,11 @@ import type { ComponentProps } from 'react'
 
 import { cn } from '@/utils'
 
-import { getNumericPattern, sanitizeNumericValue } from './utils'
+import {
+  getNumericPattern,
+  sanitizeNumericValue,
+  handleNumericStepping,
+} from './utils'
 
 type NativeInputProps = ComponentProps<'input'>
 
@@ -37,7 +41,11 @@ export const Input = ({
   pattern,
   className,
   onChange,
+  onKeyDown,
   allowNegative,
+  step,
+  min,
+  max,
   ...props
 }: InputProps) => {
   const isNumberInput = type === 'number'
@@ -61,6 +69,12 @@ export const Input = ({
           )
         }
         onChange?.(event)
+      }}
+      onKeyDown={(event) => {
+        if (isNumberInput && !event.defaultPrevented) {
+          handleNumericStepping(event, { step, min, max })
+        }
+        onKeyDown?.(event)
       }}
       {...props}
     />
