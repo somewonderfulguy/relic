@@ -50,9 +50,14 @@ export const Input = ({
 }: InputProps) => {
   const isNumberInput = type === 'number'
   const resolvedInputMode = isNumberInput ? (inputMode ?? 'numeric') : inputMode
+  const resolvedAllowNegative =
+    allowNegative ?? (min !== undefined && Number(min) < 0)
   const resolvedPattern = isNumberInput
     ? (pattern ??
-      getNumericPattern({ inputMode: resolvedInputMode, allowNegative }))
+      getNumericPattern({
+        inputMode: resolvedInputMode,
+        allowNegative: resolvedAllowNegative,
+      }))
     : pattern
 
   return (
@@ -65,14 +70,22 @@ export const Input = ({
         if (isNumberInput) {
           event.currentTarget.value = sanitizeNumericValue(
             event.currentTarget.value,
-            { inputMode: resolvedInputMode, allowNegative },
+            {
+              inputMode: resolvedInputMode,
+              allowNegative: resolvedAllowNegative,
+            },
           )
         }
         onChange?.(event)
       }}
       onKeyDown={(event) => {
         if (isNumberInput && !event.defaultPrevented) {
-          handleNumericStepping(event, { step, min, max })
+          handleNumericStepping(event, {
+            step,
+            min,
+            max,
+            allowNegative: resolvedAllowNegative,
+          })
         }
         onKeyDown?.(event)
       }}

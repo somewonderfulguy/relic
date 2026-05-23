@@ -43,12 +43,18 @@ export const handleNumericStepping = (
     step: ComponentProps<'input'>['step']
     min: ComponentProps<'input'>['min']
     max: ComponentProps<'input'>['max']
+    allowNegative?: boolean
   },
 ) => {
   const { key } = event
   const step = Number(props.step ?? 1)
   const min = props.min !== undefined ? Number(props.min) : undefined
   const max = props.max !== undefined ? Number(props.max) : undefined
+  // When negatives aren't allowed, 0 is the effective floor for incremental
+  // stepping. Without this, Arrow/PageDown produces a transient negative that
+  // the sanitizer strips back to positive, causing 0 ↔ step oscillation.
+  // Home still uses the explicit min (no-op when undefined, per W3C APG).
+  const steppingMin = props.allowNegative ? min : Math.max(min ?? 0, 0)
 
   let newValue: string | undefined
 
@@ -56,7 +62,7 @@ export const handleNumericStepping = (
     newValue = stepNumericValue({
       value: event.currentTarget.value,
       step,
-      min,
+      min: steppingMin,
       max,
       direction: key === 'ArrowUp' ? 'up' : 'down',
     })
@@ -65,7 +71,7 @@ export const handleNumericStepping = (
       value: event.currentTarget.value,
       step,
       multiplier: 10,
-      min,
+      min: steppingMin,
       max,
       direction: key === 'PageUp' ? 'up' : 'down',
     })
@@ -77,7 +83,15 @@ export const handleNumericStepping = (
 
   if (newValue !== undefined) {
     event.preventDefault()
-    event.currentTarget.value = newValue
+    // Assigning `currentTarget.value = newValue` updates React's internal
+    // valueTracker too, so the synthetic `input` event sees no delta and
+    // `onChange` is skipped — breaking controlled inputs. Call the prototype
+    // setter to update the DOM without touching the tracker.
+    const setValue = Object.getOwnPropertyDescriptor(
+      HTMLInputElement.prototype,
+      'value',
+    )?.set
+    setValue?.call(event.currentTarget, newValue)
     event.currentTarget.dispatchEvent(new Event('input', { bubbles: true }))
   }
 }

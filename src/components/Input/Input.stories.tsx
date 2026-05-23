@@ -61,20 +61,47 @@ export const TypeNumber: Story = {
   },
 }
 
-/** Enables decimals via `inputMode="decimal"`. Both `.` and `,` are accepted as the decimal separator, but only the first one typed is preserved. Additional separators are silently stripped. */
+/** Enables decimals via `inputMode="decimal"`. Both `.` and `,` are accepted as the decimal separator, but only the first one typed is preserved. Additional separators are silently stripped.<br />
+ * Also demonstrates the stepping floor: without an explicit `min` or `allowNegative`, Arrow/PageDown cannot cross zero. A naive implementation would step to a negative value, then the sanitizer would strip the minus and oscillate the value.
+ */
 export const TypeNumberDecimal: Story = {
   args: {
     type: 'number',
     inputMode: 'decimal',
   },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox')
+
+    await userEvent.click(input)
+    await userEvent.keyboard('{PageDown}')
+    await expect(input).toHaveValue('0')
+    await userEvent.keyboard('{ArrowDown}')
+    await expect(input).toHaveValue('0')
+    await userEvent.keyboard('{ArrowUp}')
+    await expect(input).toHaveValue('1')
+    await userEvent.keyboard('{PageDown}')
+    await expect(input).toHaveValue('0')
+  },
 }
 
-/** `min`, `max`, and `step` are fully supported. Providing a negative `min` implicitly enables typing the minus sign as the first character. `step` is honored by keyboard arrow keys even though the native spinner UI is suppressed. */
+/**
+ * `min`, `max`, and `step` are fully supported. Providing a negative `min` implicitly enables typing the minus sign as the first character. Stepped values are clamped to `[min, max]`.
+ *
+ * Keyboard stepping follows the <a href="https://www.w3.org/WAI/ARIA/apg/patterns/spinbutton/#keyboardinteraction" rel="noopener noreferrer nofollow" target="_blank">WAI-ARIA spinbutton</a> pattern:
+ *
+ * - `ArrowUp` / `ArrowDown` — adjust by `step`
+ * - `PageUp` / `PageDown` — adjust by `step × 10`
+ * - `Home` — jump to `min` (no-op when `min` is undefined)
+ * - `End` — jump to `max` (no-op when `max` is undefined)
+ *
+ * Stepping is keyboard-only; the native browser spinner UI is suppressed (the underlying DOM input is `type="text"`). `Home` / `End` retain their spinbutton meaning here — they move the value, not the text caret.
+ */
 export const TypeNumberWithConstraints: Story = {
   args: {
     type: 'number',
-    min: -100,
-    max: 1200,
+    min: -600,
+    max: 2400,
     step: 100,
   },
   play: async ({ canvasElement }) => {
@@ -86,13 +113,13 @@ export const TypeNumberWithConstraints: Story = {
     await expect(input).toHaveValue('100')
 
     await userEvent.keyboard('{PageDown}')
-    await expect(input).toHaveValue('-100')
+    await expect(input).toHaveValue('-600')
 
     await userEvent.keyboard('{End}')
-    await expect(input).toHaveValue('1200')
+    await expect(input).toHaveValue('2400')
 
     await userEvent.keyboard('{Home}')
-    await expect(input).toHaveValue('-100')
+    await expect(input).toHaveValue('-600')
   },
 }
 
