@@ -20,7 +20,15 @@ type NativeInputProps = ComponentProps<'input'>
 type NumericOnlyProps = {
   /**
    * When `true`, permits typing a leading minus sign to produce a negative value.
-   * Redundant when a negative `min` is provided — a negative bound already enables negatives.
+   * Implicitly enabled when `min` is negative.
+   *
+   * `min` is the source of truth when defined: a non-negative `min` resolves
+   * `allowNegative` to `false`, and a negative `min` resolves it to `true`,
+   * regardless of the prop value. A dev-only `console.warn` fires only for the
+   * hard conflict (`allowNegative={true}` paired with `min >= 0`); the
+   * symmetric case (`allowNegative={false}` with a negative `min`) resolves
+   * silently, since that one is often produced by Storybook / form-library
+   * defaults rather than intentional input.
    */
   allowNegative?: boolean
 }
@@ -31,7 +39,7 @@ type NumericInputProps = Omit<NativeInputProps, 'type'> & {
 
 type NonNumericInputProps = Omit<NativeInputProps, 'type'> & {
   type?: Exclude<NativeInputProps['type'], 'number'>
-} & { [K in keyof NumericOnlyProps]?: never }
+} & { [Key in keyof NumericOnlyProps]?: never }
 
 export type InputProps = NumericInputProps | NonNumericInputProps
 
@@ -50,8 +58,12 @@ export const Input = ({
 }: InputProps) => {
   const isNumberInput = type === 'number'
   const resolvedInputMode = isNumberInput ? (inputMode ?? 'numeric') : inputMode
+  const numericMin = min !== undefined ? Number(min) : undefined
+  // `min` is the source of truth when defined: its sign decides whether
+  // negatives are reachable, regardless of the prop. Only when `min` is unset
+  // does `allowNegative` actually drive the result.
   const resolvedAllowNegative =
-    allowNegative ?? (min !== undefined && Number(min) < 0)
+    numericMin !== undefined ? numericMin < 0 : (allowNegative ?? false)
   const resolvedPattern = isNumberInput
     ? (pattern ??
       getNumericPattern({
@@ -59,6 +71,18 @@ export const Input = ({
         allowNegative: resolvedAllowNegative,
       }))
     : pattern
+
+  if (
+    process.env.NODE_ENV !== 'production' &&
+    isNumberInput &&
+    allowNegative === true &&
+    numericMin !== undefined &&
+    numericMin >= 0
+  ) {
+    console.warn(
+      `Input: \`allowNegative={true}\` was ignored because \`min={${min}}\` already forbids negative values. Either set a negative \`min\` or remove \`allowNegative\`.`,
+    )
+  }
 
   return (
     <input

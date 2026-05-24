@@ -25,7 +25,7 @@ const meta: Meta = {
     allowNegative: {
       control: 'boolean',
       description:
-        'Permits typing a leading minus sign to produce a negative value. Implicitly enabled when `min` is negative. Exclusive to `type="number"` - TypeScript rejects it on any other type.',
+        'Permits typing a leading minus sign to produce a negative value. Implicitly enabled when `min` is negative. Silently resolved to `false` (with a dev-only `console.warn`) when `min` is non-negative — the explicit lower bound wins. Exclusive to `type="number"` — TypeScript rejects it on any other type.',
       table: {
         type: { summary: 'boolean' },
       },
