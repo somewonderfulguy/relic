@@ -15,12 +15,14 @@ export const Button = ({
   size = 'medium',
   className,
   asChild = false,
+  type = 'button',
   ...props
 }: ButtonProps) => {
   const Comp = asChild ? Slot : 'button'
   return (
     <Comp
       className={cn(buttonVariants({ variant, size }), className)}
+      type={type}
       {...props}
     />
   )

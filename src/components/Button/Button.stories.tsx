@@ -2,6 +2,9 @@ import type { Meta, StoryObj } from '@storybook/react-vite'
 
 import { Button } from './Button'
 
+// TODO: `type`
+
+/** TODO: add here that `type="button"` is the default. */
 const meta: Meta = {
   title: 'Button',
   component: Button,

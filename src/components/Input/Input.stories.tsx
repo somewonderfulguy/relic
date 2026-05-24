@@ -10,6 +10,7 @@ const meta: Meta = {
   args: {
     type: 'text',
     disabled: false,
+    allowNegative: false,
   },
   argTypes: {
     type: {
@@ -20,6 +21,15 @@ const meta: Meta = {
           summary: 'text | number | email | password | search | tel | url',
         },
       },
+    },
+    allowNegative: {
+      control: 'boolean',
+      description:
+        'Permits typing a leading minus sign to produce a negative value. Implicitly enabled when `min` is negative. Exclusive to `type="number"` - TypeScript rejects it on any other type.',
+      table: {
+        type: { summary: 'boolean' },
+      },
+      if: { arg: 'type', eq: 'number' },
     },
   },
   parameters: {
