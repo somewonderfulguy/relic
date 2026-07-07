@@ -1,1 +1,426 @@
-# Upcoming theming docs
+import { ColorItem, ColorPalette, Meta } from '@storybook/addon-docs/blocks'
+
+<Meta title="Theming" />
+
+# Theming
+
+Relic themes are CSS-variable themes. Components do not hard-code palette
+colors. They read semantic tokens such as `--ds-color-bg`,
+`--ds-color-primary`, and `--ds-color-text`, then the active theme decides what
+those tokens mean.
+
+The color system has two layers:
+
+1. Primitive palette tokens live in `src/styles/tokens.css`. These are raw
+   colors like `--ds-palette-gray-950` or `--ds-palette-blue-600`.
+2. Semantic theme tokens live in `src/styles/themes.css`. These are role-based
+   aliases like `--ds-color-surface`, `--ds-color-border`, and
+   `--ds-color-destructive`.
+
+Components should only reference semantic `--ds-color-*` tokens. That keeps the
+component API stable while the visual identity changes underneath it.
+
+## How theme switching works
+
+Set `data-theme` on `html` or on any ancestor of the themed UI:
+
+```html
+<html data-theme="dark">
+  ...
+</html>
+```
+
+The current Storybook toolbar uses the same mechanism through
+`withThemeByDataAttribute` in `.storybook/preview.ts`. The available draft
+themes are:
+
+- `yellow`
+- `dark`
+- `dark-red`
+- `white-on-black`
+
+`yellow` is also the default `:root` theme, so the app has a fallback even when
+no `data-theme` attribute is present.
+
+## Adding or changing a theme
+
+1. Add or adjust raw color values in `src/styles/tokens.css` when the design
+   needs new primitives.
+2. Map every required semantic `--ds-color-*` token in
+   `src/styles/themes.css`.
+3. Register the theme name in `.storybook/preview.ts` so it appears in the
+   Storybook theme toolbar.
+4. Check components in every theme, especially focus, disabled, destructive,
+   and high-contrast states.
+
+## Primitive palette
+
+These are the current raw colors. They are intentionally a draft foundation and
+can change without requiring component code changes.
+
+<ColorPalette>
+  <ColorItem
+    title="Neutral"
+    subtitle="Base neutral scale from tokens.css"
+    colors={{
+      '--ds-palette-white': 'var(--ds-palette-white)',
+      '--ds-palette-gray-50': 'var(--ds-palette-gray-50)',
+      '--ds-palette-gray-100': 'var(--ds-palette-gray-100)',
+      '--ds-palette-gray-200': 'var(--ds-palette-gray-200)',
+      '--ds-palette-gray-300': 'var(--ds-palette-gray-300)',
+      '--ds-palette-gray-400': 'var(--ds-palette-gray-400)',
+      '--ds-palette-gray-500': 'var(--ds-palette-gray-500)',
+      '--ds-palette-gray-600': 'var(--ds-palette-gray-600)',
+      '--ds-palette-gray-700': 'var(--ds-palette-gray-700)',
+      '--ds-palette-gray-800': 'var(--ds-palette-gray-800)',
+      '--ds-palette-gray-900': 'var(--ds-palette-gray-900)',
+      '--ds-palette-gray-950': 'var(--ds-palette-gray-950)',
+      '--ds-palette-black': 'var(--ds-palette-black)',
+    }}
+  />
+  <ColorItem
+    title="Blue"
+    subtitle="Current primary/action candidate scale"
+    colors={{
+      '--ds-palette-blue-50': 'var(--ds-palette-blue-50)',
+      '--ds-palette-blue-100': 'var(--ds-palette-blue-100)',
+      '--ds-palette-blue-200': 'var(--ds-palette-blue-200)',
+      '--ds-palette-blue-300': 'var(--ds-palette-blue-300)',
+      '--ds-palette-blue-400': 'var(--ds-palette-blue-400)',
+      '--ds-palette-blue-500': 'var(--ds-palette-blue-500)',
+      '--ds-palette-blue-600': 'var(--ds-palette-blue-600)',
+      '--ds-palette-blue-700': 'var(--ds-palette-blue-700)',
+      '--ds-palette-blue-800': 'var(--ds-palette-blue-800)',
+      '--ds-palette-blue-900': 'var(--ds-palette-blue-900)',
+    }}
+  />
+  <ColorItem
+    title="Red"
+    subtitle="Error, destructive, and dark-red theme scale"
+    colors={{
+      '--ds-palette-red-50': 'var(--ds-palette-red-50)',
+      '--ds-palette-red-100': 'var(--ds-palette-red-100)',
+      '--ds-palette-red-200': 'var(--ds-palette-red-200)',
+      '--ds-palette-red-300': 'var(--ds-palette-red-300)',
+      '--ds-palette-red-400': 'var(--ds-palette-red-400)',
+      '--ds-palette-red-500': 'var(--ds-palette-red-500)',
+      '--ds-palette-red-600': 'var(--ds-palette-red-600)',
+      '--ds-palette-red-700': 'var(--ds-palette-red-700)',
+      '--ds-palette-red-800': 'var(--ds-palette-red-800)',
+      '--ds-palette-red-900': 'var(--ds-palette-red-900)',
+    }}
+  />
+  <ColorItem
+    title="Green"
+    subtitle="Success scale"
+    colors={{
+      '--ds-palette-green-50': 'var(--ds-palette-green-50)',
+      '--ds-palette-green-100': 'var(--ds-palette-green-100)',
+      '--ds-palette-green-200': 'var(--ds-palette-green-200)',
+      '--ds-palette-green-300': 'var(--ds-palette-green-300)',
+      '--ds-palette-green-400': 'var(--ds-palette-green-400)',
+      '--ds-palette-green-500': 'var(--ds-palette-green-500)',
+      '--ds-palette-green-600': 'var(--ds-palette-green-600)',
+      '--ds-palette-green-700': 'var(--ds-palette-green-700)',
+      '--ds-palette-green-800': 'var(--ds-palette-green-800)',
+      '--ds-palette-green-900': 'var(--ds-palette-green-900)',
+    }}
+  />
+  <ColorItem
+    title="Amber"
+    subtitle="Warning scale"
+    colors={{
+      '--ds-palette-amber-50': 'var(--ds-palette-amber-50)',
+      '--ds-palette-amber-100': 'var(--ds-palette-amber-100)',
+      '--ds-palette-amber-200': 'var(--ds-palette-amber-200)',
+      '--ds-palette-amber-300': 'var(--ds-palette-amber-300)',
+      '--ds-palette-amber-400': 'var(--ds-palette-amber-400)',
+      '--ds-palette-amber-500': 'var(--ds-palette-amber-500)',
+      '--ds-palette-amber-600': 'var(--ds-palette-amber-600)',
+      '--ds-palette-amber-700': 'var(--ds-palette-amber-700)',
+      '--ds-palette-amber-800': 'var(--ds-palette-amber-800)',
+      '--ds-palette-amber-900': 'var(--ds-palette-amber-900)',
+    }}
+  />
+</ColorPalette>
+
+## Theme palettes
+
+Each theme maps the same semantic slots to different values. The swatches below
+are scoped with `data-theme`, just like application UI.
+
+### Yellow
+
+<div data-theme="yellow">
+  <ColorPalette>
+    <ColorItem
+      title="Background"
+      subtitle="Page-level layers"
+      colors={{
+        '--ds-color-bg': 'var(--ds-color-bg)',
+        '--ds-color-bg-subtle': 'var(--ds-color-bg-subtle)',
+        '--ds-color-bg-muted': 'var(--ds-color-bg-muted)',
+      }}
+    />
+    <ColorItem
+      title="Surface"
+      subtitle="Component containers"
+      colors={{
+        '--ds-color-surface': 'var(--ds-color-surface)',
+        '--ds-color-surface-raised': 'var(--ds-color-surface-raised)',
+      }}
+    />
+    <ColorItem
+      title="Border"
+      subtitle="Container and control outlines"
+      colors={{
+        '--ds-color-border': 'var(--ds-color-border)',
+        '--ds-color-border-muted': 'var(--ds-color-border-muted)',
+      }}
+    />
+    <ColorItem
+      title="Text"
+      subtitle="Foreground hierarchy"
+      colors={{
+        '--ds-color-text': 'var(--ds-color-text)',
+        '--ds-color-text-muted': 'var(--ds-color-text-muted)',
+        '--ds-color-text-subtle': 'var(--ds-color-text-subtle)',
+      }}
+    />
+    <ColorItem
+      title="Actions"
+      subtitle="Primary, secondary, and destructive controls"
+      colors={{
+        '--ds-color-primary': 'var(--ds-color-primary)',
+        '--ds-color-primary-hover': 'var(--ds-color-primary-hover)',
+        '--ds-color-primary-active': 'var(--ds-color-primary-active)',
+        '--ds-color-primary-text': 'var(--ds-color-primary-text)',
+        '--ds-color-secondary': 'var(--ds-color-secondary)',
+        '--ds-color-secondary-hover': 'var(--ds-color-secondary-hover)',
+        '--ds-color-secondary-active': 'var(--ds-color-secondary-active)',
+        '--ds-color-secondary-text': 'var(--ds-color-secondary-text)',
+        '--ds-color-destructive': 'var(--ds-color-destructive)',
+        '--ds-color-destructive-hover': 'var(--ds-color-destructive-hover)',
+        '--ds-color-destructive-active': 'var(--ds-color-destructive-active)',
+        '--ds-color-destructive-text': 'var(--ds-color-destructive-text)',
+      }}
+    />
+    <ColorItem
+      title="Status"
+      subtitle="Feedback and focus"
+      colors={{
+        '--ds-color-success': 'var(--ds-color-success)',
+        '--ds-color-warning': 'var(--ds-color-warning)',
+        '--ds-color-danger': 'var(--ds-color-danger)',
+        '--ds-color-focus-ring': 'var(--ds-color-focus-ring)',
+      }}
+    />
+  </ColorPalette>
+</div>
+
+### Dark
+
+<div data-theme="dark">
+  <ColorPalette>
+    <ColorItem
+      title="Background"
+      subtitle="Page-level layers"
+      colors={{
+        '--ds-color-bg': 'var(--ds-color-bg)',
+        '--ds-color-bg-subtle': 'var(--ds-color-bg-subtle)',
+        '--ds-color-bg-muted': 'var(--ds-color-bg-muted)',
+      }}
+    />
+    <ColorItem
+      title="Surface"
+      subtitle="Component containers"
+      colors={{
+        '--ds-color-surface': 'var(--ds-color-surface)',
+        '--ds-color-surface-raised': 'var(--ds-color-surface-raised)',
+      }}
+    />
+    <ColorItem
+      title="Border"
+      subtitle="Container and control outlines"
+      colors={{
+        '--ds-color-border': 'var(--ds-color-border)',
+        '--ds-color-border-muted': 'var(--ds-color-border-muted)',
+      }}
+    />
+    <ColorItem
+      title="Text"
+      subtitle="Foreground hierarchy"
+      colors={{
+        '--ds-color-text': 'var(--ds-color-text)',
+        '--ds-color-text-muted': 'var(--ds-color-text-muted)',
+        '--ds-color-text-subtle': 'var(--ds-color-text-subtle)',
+      }}
+    />
+    <ColorItem
+      title="Actions"
+      subtitle="Primary, secondary, and destructive controls"
+      colors={{
+        '--ds-color-primary': 'var(--ds-color-primary)',
+        '--ds-color-primary-hover': 'var(--ds-color-primary-hover)',
+        '--ds-color-primary-active': 'var(--ds-color-primary-active)',
+        '--ds-color-primary-text': 'var(--ds-color-primary-text)',
+        '--ds-color-secondary': 'var(--ds-color-secondary)',
+        '--ds-color-secondary-hover': 'var(--ds-color-secondary-hover)',
+        '--ds-color-secondary-active': 'var(--ds-color-secondary-active)',
+        '--ds-color-secondary-text': 'var(--ds-color-secondary-text)',
+        '--ds-color-destructive': 'var(--ds-color-destructive)',
+        '--ds-color-destructive-hover': 'var(--ds-color-destructive-hover)',
+        '--ds-color-destructive-active': 'var(--ds-color-destructive-active)',
+        '--ds-color-destructive-text': 'var(--ds-color-destructive-text)',
+      }}
+    />
+    <ColorItem
+      title="Status"
+      subtitle="Feedback and focus"
+      colors={{
+        '--ds-color-success': 'var(--ds-color-success)',
+        '--ds-color-warning': 'var(--ds-color-warning)',
+        '--ds-color-danger': 'var(--ds-color-danger)',
+        '--ds-color-focus-ring': 'var(--ds-color-focus-ring)',
+      }}
+    />
+  </ColorPalette>
+</div>
+
+### Dark Red
+
+<div data-theme="dark-red">
+  <ColorPalette>
+    <ColorItem
+      title="Background"
+      subtitle="Page-level layers"
+      colors={{
+        '--ds-color-bg': 'var(--ds-color-bg)',
+        '--ds-color-bg-subtle': 'var(--ds-color-bg-subtle)',
+        '--ds-color-bg-muted': 'var(--ds-color-bg-muted)',
+      }}
+    />
+    <ColorItem
+      title="Surface"
+      subtitle="Component containers"
+      colors={{
+        '--ds-color-surface': 'var(--ds-color-surface)',
+        '--ds-color-surface-raised': 'var(--ds-color-surface-raised)',
+      }}
+    />
+    <ColorItem
+      title="Border"
+      subtitle="Container and control outlines"
+      colors={{
+        '--ds-color-border': 'var(--ds-color-border)',
+        '--ds-color-border-muted': 'var(--ds-color-border-muted)',
+      }}
+    />
+    <ColorItem
+      title="Text"
+      subtitle="Foreground hierarchy"
+      colors={{
+        '--ds-color-text': 'var(--ds-color-text)',
+        '--ds-color-text-muted': 'var(--ds-color-text-muted)',
+        '--ds-color-text-subtle': 'var(--ds-color-text-subtle)',
+      }}
+    />
+    <ColorItem
+      title="Actions"
+      subtitle="Primary, secondary, and destructive controls"
+      colors={{
+        '--ds-color-primary': 'var(--ds-color-primary)',
+        '--ds-color-primary-hover': 'var(--ds-color-primary-hover)',
+        '--ds-color-primary-active': 'var(--ds-color-primary-active)',
+        '--ds-color-primary-text': 'var(--ds-color-primary-text)',
+        '--ds-color-secondary': 'var(--ds-color-secondary)',
+        '--ds-color-secondary-hover': 'var(--ds-color-secondary-hover)',
+        '--ds-color-secondary-active': 'var(--ds-color-secondary-active)',
+        '--ds-color-secondary-text': 'var(--ds-color-secondary-text)',
+        '--ds-color-destructive': 'var(--ds-color-destructive)',
+        '--ds-color-destructive-hover': 'var(--ds-color-destructive-hover)',
+        '--ds-color-destructive-active': 'var(--ds-color-destructive-active)',
+        '--ds-color-destructive-text': 'var(--ds-color-destructive-text)',
+      }}
+    />
+    <ColorItem
+      title="Status"
+      subtitle="Feedback and focus"
+      colors={{
+        '--ds-color-success': 'var(--ds-color-success)',
+        '--ds-color-warning': 'var(--ds-color-warning)',
+        '--ds-color-danger': 'var(--ds-color-danger)',
+        '--ds-color-focus-ring': 'var(--ds-color-focus-ring)',
+      }}
+    />
+  </ColorPalette>
+</div>
+
+### White on Black
+
+<div data-theme="white-on-black">
+  <ColorPalette>
+    <ColorItem
+      title="Background"
+      subtitle="Page-level layers"
+      colors={{
+        '--ds-color-bg': 'var(--ds-color-bg)',
+        '--ds-color-bg-subtle': 'var(--ds-color-bg-subtle)',
+        '--ds-color-bg-muted': 'var(--ds-color-bg-muted)',
+      }}
+    />
+    <ColorItem
+      title="Surface"
+      subtitle="Component containers"
+      colors={{
+        '--ds-color-surface': 'var(--ds-color-surface)',
+        '--ds-color-surface-raised': 'var(--ds-color-surface-raised)',
+      }}
+    />
+    <ColorItem
+      title="Border"
+      subtitle="Container and control outlines"
+      colors={{
+        '--ds-color-border': 'var(--ds-color-border)',
+        '--ds-color-border-muted': 'var(--ds-color-border-muted)',
+      }}
+    />
+    <ColorItem
+      title="Text"
+      subtitle="Foreground hierarchy"
+      colors={{
+        '--ds-color-text': 'var(--ds-color-text)',
+        '--ds-color-text-muted': 'var(--ds-color-text-muted)',
+        '--ds-color-text-subtle': 'var(--ds-color-text-subtle)',
+      }}
+    />
+    <ColorItem
+      title="Actions"
+      subtitle="Primary, secondary, and destructive controls"
+      colors={{
+        '--ds-color-primary': 'var(--ds-color-primary)',
+        '--ds-color-primary-hover': 'var(--ds-color-primary-hover)',
+        '--ds-color-primary-active': 'var(--ds-color-primary-active)',
+        '--ds-color-primary-text': 'var(--ds-color-primary-text)',
+        '--ds-color-secondary': 'var(--ds-color-secondary)',
+        '--ds-color-secondary-hover': 'var(--ds-color-secondary-hover)',
+        '--ds-color-secondary-active': 'var(--ds-color-secondary-active)',
+        '--ds-color-secondary-text': 'var(--ds-color-secondary-text)',
+        '--ds-color-destructive': 'var(--ds-color-destructive)',
+        '--ds-color-destructive-hover': 'var(--ds-color-destructive-hover)',
+        '--ds-color-destructive-active': 'var(--ds-color-destructive-active)',
+        '--ds-color-destructive-text': 'var(--ds-color-destructive-text)',
+      }}
+    />
+    <ColorItem
+      title="Status"
+      subtitle="Feedback and focus"
+      colors={{
+        '--ds-color-success': 'var(--ds-color-success)',
+        '--ds-color-warning': 'var(--ds-color-warning)',
+        '--ds-color-danger': 'var(--ds-color-danger)',
+        '--ds-color-focus-ring': 'var(--ds-color-focus-ring)',
+      }}
+    />
+  </ColorPalette>
+</div>
