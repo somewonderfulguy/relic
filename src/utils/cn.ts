@@ -7,4 +7,4 @@ export const cn = (...args: unknown[]) =>
     .flat()
     .filter((x) => typeof x === 'string')
     .join(' ')
-    .trim();
+    .trim()
