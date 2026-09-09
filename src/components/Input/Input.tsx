@@ -6,6 +6,7 @@ import { cn } from '@/utils'
 
 import {
   getNumericPattern,
+  normalizeNumericValue,
   sanitizeNumericValue,
   handleNumericStepping,
 } from './utils'
@@ -50,6 +51,7 @@ export const Input = ({
   className,
   onChange,
   onKeyDown,
+  onBlur,
   allowNegative,
   step,
   min,
@@ -112,6 +114,28 @@ export const Input = ({
           })
         }
         onKeyDown?.(event)
+      }}
+      onBlur={(event) => {
+        if (isNumberInput) {
+          const normalized = normalizeNumericValue(event.currentTarget.value, {
+            inputMode: resolvedInputMode,
+            allowNegative: resolvedAllowNegative,
+          })
+          if (normalized !== event.currentTarget.value) {
+            // Prototype setter + input event: same trick as numericStepping,
+            // so controlled inputs' onChange fires with the normalized value
+            // instead of silently diverging from React state.
+            const setValue = Object.getOwnPropertyDescriptor(
+              HTMLInputElement.prototype,
+              'value',
+            )?.set
+            setValue?.call(event.currentTarget, normalized)
+            event.currentTarget.dispatchEvent(
+              new Event('input', { bubbles: true }),
+            )
+          }
+        }
+        onBlur?.(event)
       }}
       {...props}
     />
