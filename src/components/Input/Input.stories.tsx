@@ -71,7 +71,7 @@ export const TypeNumber: Story = {
   },
 }
 
-/** Enables decimals via `inputMode="decimal"`. Both `.` and `,` are accepted as the decimal separator, but only the first one typed is preserved. Additional separators are silently stripped.<br />
+/** Enables decimals via `inputMode="decimal"`. Both `.` and `,` are accepted while typing — the first separator wins and additional ones are silently stripped. In-progress shapes such as `.5`, `100.`, and `1,5` are permitted while typing and canonicalized on blur (see the <em>Type Number Blur Normalization</em> story for the full commit-time rules).<br />
  * Also demonstrates the stepping floor: without an explicit `min` or `allowNegative`, Arrow/PageDown cannot cross zero. A naive implementation would step to a negative value, then the sanitizer would strip the minus and oscillate the value.
  */
 export const TypeNumberDecimal: Story = {
@@ -92,6 +92,50 @@ export const TypeNumberDecimal: Story = {
     await expect(input).toHaveValue('1')
     await userEvent.keyboard('{PageDown}')
     await expect(input).toHaveValue('0')
+  },
+}
+
+/**
+ * On blur, the field commits the value in a canonical shape:
+ *
+ * - Leading separators gain a `0` — `.5` → `0.5`, `,5` → `0.5`.
+ * - Trailing separators are dropped — `100.` → `100`.
+ * - A lone `-` (under `allowNegative`) clears to empty.
+ * - Comma is canonicalized to dot regardless of what was typed — `1,5` → `1.5`.
+ *
+ * The dot-canonical output means consumers can `Number(value)` the result directly, so form libraries, JSON payloads, and database round-trips work without a locale-aware parse step. Comma remains accepted while typing purely as a convenience for users used to European conventions — it never leaves the field on commit.
+ *
+ * The canonicalization is written through the native `HTMLInputElement` value setter, so controlled inputs' `onChange` fires with the normalized value instead of silently diverging from React state.
+ */
+export const TypeNumberBlurNormalization: Story = {
+  args: {
+    type: 'number',
+    inputMode: 'decimal',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox')
+
+    await userEvent.type(input, '.5')
+    await expect(input).toHaveValue('.5')
+    await userEvent.tab()
+    await expect(input).toHaveValue('0.5')
+
+    await userEvent.clear(input)
+    await userEvent.type(input, ',5')
+    await expect(input).toHaveValue(',5')
+    await userEvent.tab()
+    await expect(input).toHaveValue('0.5')
+
+    await userEvent.clear(input)
+    await userEvent.type(input, '1,5')
+    await userEvent.tab()
+    await expect(input).toHaveValue('1.5')
+
+    await userEvent.clear(input)
+    await userEvent.type(input, '100.')
+    await userEvent.tab()
+    await expect(input).toHaveValue('100')
   },
 }
 

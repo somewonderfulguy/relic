@@ -1,15 +1,15 @@
 import { normalizeNumericValue } from '../utils'
 
-test('decimal mode: prepends 0 to leading separator', () => {
+test('decimal mode: prepends 0 to a leading separator', () => {
   expect(normalizeNumericValue('.5', { inputMode: 'decimal' })).toBe('0.5')
-  expect(normalizeNumericValue(',5', { inputMode: 'decimal' })).toBe('0,5')
+  expect(normalizeNumericValue(',5', { inputMode: 'decimal' })).toBe('0.5')
 })
 
-test('decimal mode: prepends 0 to leading separator with negative', () => {
+test('decimal mode: prepends 0 to a leading separator with negative', () => {
   const options = { inputMode: 'decimal' as const, allowNegative: true }
 
   expect(normalizeNumericValue('-.5', options)).toBe('-0.5')
-  expect(normalizeNumericValue('-,5', options)).toBe('-0,5')
+  expect(normalizeNumericValue('-,5', options)).toBe('-0.5')
 })
 
 test('decimal mode: drops trailing separator', () => {
@@ -24,16 +24,16 @@ test('decimal mode: drops trailing separator with negative', () => {
   expect(normalizeNumericValue('-100,', options)).toBe('-100')
 })
 
-test('decimal mode: canonical values pass through unchanged', () => {
-  expect(normalizeNumericValue('12.34', { inputMode: 'decimal' })).toBe('12.34')
-  expect(normalizeNumericValue('12,34', { inputMode: 'decimal' })).toBe('12,34')
-  expect(normalizeNumericValue('0', { inputMode: 'decimal' })).toBe('0')
-  expect(normalizeNumericValue('42', { inputMode: 'decimal' })).toBe('42')
+test('decimal mode: canonicalizes comma to dot', () => {
+  expect(normalizeNumericValue('12,34', { inputMode: 'decimal' })).toBe('12.34')
+  expect(normalizeNumericValue('0,5', { inputMode: 'decimal' })).toBe('0.5')
 })
 
-test('decimal mode: preserves the separator the user typed', () => {
+test('decimal mode: dot-form values pass through unchanged', () => {
+  expect(normalizeNumericValue('12.34', { inputMode: 'decimal' })).toBe('12.34')
   expect(normalizeNumericValue('0.5', { inputMode: 'decimal' })).toBe('0.5')
-  expect(normalizeNumericValue('0,5', { inputMode: 'decimal' })).toBe('0,5')
+  expect(normalizeNumericValue('0', { inputMode: 'decimal' })).toBe('0')
+  expect(normalizeNumericValue('42', { inputMode: 'decimal' })).toBe('42')
 })
 
 test('clears values that have no digits', () => {

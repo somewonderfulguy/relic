@@ -8,9 +8,10 @@ export type NormalizeNumericValueOptions = {
 /**
  * Converts an in-progress numeric value to its canonical committed form.
  * Runs on blur, not on every keystroke — the sanitizer permits intermediate
- * shapes like `.5`, `100.`, and `-` while typing; this collapses them to
- * `0.5`, `100`, and `''` once the field is committed. Preserves whichever
- * decimal separator (dot or comma) the user typed.
+ * shapes like `.5`, `100.`, `-`, and comma separators while typing; this
+ * collapses them to `0.5`, `100`, `''`, and dot-form once the field is
+ * committed. Dot is the model separator: consumers can `Number(value)` the
+ * result without a locale-aware parse step. Comma is a typing convenience.
  */
 export const normalizeNumericValue = (
   value: string,
@@ -26,11 +27,6 @@ export const normalizeNumericValue = (
     return isNegative ? `-${unsigned}` : unsigned
   }
 
-  const separator = unsigned.match(/[.,]/)?.[0]
-  if (!separator) {
-    return isNegative ? `-${unsigned}` : unsigned
-  }
-
   const [integerPart, decimalPart = ''] = unsigned.split(/[.,]/)
 
   if (decimalPart === '') {
@@ -38,7 +34,7 @@ export const normalizeNumericValue = (
   }
 
   const normalizedInt = integerPart === '' ? '0' : integerPart
-  const normalized = `${normalizedInt}${separator}${decimalPart}`
+  const normalized = `${normalizedInt}.${decimalPart}`
 
   return isNegative ? `-${normalized}` : normalized
 }
