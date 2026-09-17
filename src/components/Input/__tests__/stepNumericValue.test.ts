@@ -66,6 +66,12 @@ test('avoids floating-point rounding artifacts', () => {
   )
 })
 
+test('rounds exponent-notation steps to their decimal precision', () => {
+  expect(stepNumericValue({ value: '0', step: 1e-7, direction: 'up' })).toBe(
+    '0.0000001',
+  )
+})
+
 test('multiplier scales the step without corrupting precision', () => {
   expect(
     stepNumericValue({ value: '0', step: 1, multiplier: 10, direction: 'up' }),

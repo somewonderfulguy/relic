@@ -5,7 +5,9 @@ import type { ComponentProps } from 'react'
 import { cn } from '@/utils'
 
 import {
+  formatNumericConstraintWarning,
   getNumericPattern,
+  parseNumericConstraints,
   normalizeNumericValue,
   sanitizeNumericValue,
   handleNumericStepping,
@@ -60,7 +62,10 @@ export const Input = ({
 }: InputProps) => {
   const isNumberInput = type === 'number'
   const resolvedInputMode = isNumberInput ? (inputMode ?? 'numeric') : inputMode
-  const numericMin = min !== undefined ? Number(min) : undefined
+  const numericConstraints = isNumberInput
+    ? parseNumericConstraints({ step, min, max })
+    : undefined
+  const numericMin = numericConstraints?.min
   // `min` is the source of truth when defined: its sign decides whether
   // negatives are reachable, regardless of the prop. Only when `min` is unset
   // does `allowNegative` actually drive the result.
@@ -86,6 +91,12 @@ export const Input = ({
     )
   }
 
+  if (process.env.NODE_ENV !== 'production' && numericConstraints) {
+    numericConstraints.issues.forEach((issue) => {
+      console.warn(formatNumericConstraintWarning(issue))
+    })
+  }
+
   return (
     <input
       type={isNumberInput ? 'text' : type}
@@ -105,6 +116,7 @@ export const Input = ({
         onChange?.(event)
       }}
       onKeyDown={(event) => {
+        onKeyDown?.(event)
         if (isNumberInput && !event.defaultPrevented) {
           handleNumericStepping(event, {
             step,
@@ -113,7 +125,6 @@ export const Input = ({
             allowNegative: resolvedAllowNegative,
           })
         }
-        onKeyDown?.(event)
       }}
       onBlur={(event) => {
         if (isNumberInput) {

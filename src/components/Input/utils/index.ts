@@ -1,4 +1,5 @@
 export * from './getNumericPattern'
 export * from './normalizeNumericValue'
 export * from './numericStepping'
+export * from './parseNumericConstraints'
 export * from './sanitizeNumericValue'

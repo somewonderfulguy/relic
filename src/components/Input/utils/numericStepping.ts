@@ -1,5 +1,7 @@
 import type { ComponentProps, KeyboardEvent } from 'react'
 
+import { parseNumericConstraints } from './parseNumericConstraints'
+
 export type StepNumericValueOptions = {
   value: string
   step: number
@@ -28,11 +30,24 @@ export const stepNumericValue = ({
 
   // Precision is derived from step, not step*multiplier, to avoid FP artifacts
   // (e.g. 0.3 * 10 = 2.9999... in JS)
-  return String(parseFloat(next.toFixed(getDecimalPrecision(step))))
+  return formatSteppedValue(next, getDecimalPrecision(step))
+}
+
+const formatSteppedValue = (value: number, precision: number) => {
+  const fixed = value.toFixed(precision)
+  const trimmed = fixed.includes('.') ? fixed.replace(/\.?0+$/, '') : fixed
+
+  return trimmed === '-0' ? '0' : trimmed
 }
 
 const getDecimalPrecision = (value: number) => {
   const str = String(value)
+  if (str.includes('e')) {
+    const [coefficient, exponent = '0'] = str.split('e')
+    const coefficientPrecision = coefficient.split('.')[1]?.length ?? 0
+    return Math.min(Math.max(coefficientPrecision - Number(exponent), 0), 100)
+  }
+
   const i = str.indexOf('.')
   return i === -1 ? 0 : str.length - i - 1
 }
@@ -47,18 +62,16 @@ export const handleNumericStepping = (
   },
 ) => {
   const { key } = event
-  const step = Number(props.step ?? 1)
-  const min = props.min !== undefined ? Number(props.min) : undefined
-  const max = props.max !== undefined ? Number(props.max) : undefined
+  const { step, min, max } = parseNumericConstraints(props)
   // When negatives aren't allowed, 0 is the effective floor for incremental
   // stepping. Without this, Arrow/PageDown produces a transient negative that
   // the sanitizer strips back to positive, causing 0 ↔ step oscillation.
-  // Home still uses the explicit min (no-op when undefined, per W3C APG).
+  // Home still uses the parsed min (no-op when absent/invalid, per W3C APG).
   const steppingMin = props.allowNegative ? min : Math.max(min ?? 0, 0)
 
   let newValue: string | undefined
 
-  if (key === 'ArrowUp' || key === 'ArrowDown') {
+  if (step !== undefined && (key === 'ArrowUp' || key === 'ArrowDown')) {
     newValue = stepNumericValue({
       value: event.currentTarget.value,
       step,
@@ -66,7 +79,7 @@ export const handleNumericStepping = (
       max,
       direction: key === 'ArrowUp' ? 'up' : 'down',
     })
-  } else if (key === 'PageUp' || key === 'PageDown') {
+  } else if (step !== undefined && (key === 'PageUp' || key === 'PageDown')) {
     newValue = stepNumericValue({
       value: event.currentTarget.value,
       step,

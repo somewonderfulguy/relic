@@ -177,6 +177,96 @@ export const TypeNumberWithConstraints: Story = {
   },
 }
 
+/**
+ * Consumer `onKeyDown` handlers run before internal keyboard stepping.
+ * Calling `event.preventDefault()` lets app code opt out of a particular step
+ * key while leaving the rest of the numeric behavior intact.
+ */
+export const TypeNumberPreventStepping: Story = {
+  args: {
+    type: 'number',
+    defaultValue: '10',
+    onKeyDown: (event) => {
+      if (event.key === 'ArrowUp') {
+        event.preventDefault()
+      }
+    },
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox')
+
+    await userEvent.click(input)
+    await userEvent.keyboard('{ArrowUp}')
+    await expect(input).toHaveValue('10')
+
+    await userEvent.keyboard('{ArrowDown}')
+    await expect(input).toHaveValue('9')
+  },
+}
+
+/**
+ * `step="any"` disables incremental Arrow/Page stepping, matching native number
+ * input semantics. Valid `min` and `max` still power Home/End jumps.
+ */
+export const TypeNumberStepAny: Story = {
+  args: {
+    type: 'number',
+    defaultValue: '5',
+    step: 'any',
+    min: -10,
+    max: 10,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox')
+
+    await userEvent.click(input)
+    await userEvent.keyboard('{ArrowUp}')
+    await expect(input).toHaveValue('5')
+
+    await userEvent.keyboard('{PageDown}')
+    await expect(input).toHaveValue('5')
+
+    await userEvent.keyboard('{Home}')
+    await expect(input).toHaveValue('-10')
+
+    await userEvent.keyboard('{End}')
+    await expect(input).toHaveValue('10')
+  },
+}
+
+/**
+ * Invalid constraint props are ignored instead of being coerced to accidental
+ * numbers or written into the field as `NaN`.
+ */
+export const TypeNumberInvalidConstraints: Story = {
+  args: {
+    type: 'number',
+    defaultValue: '5',
+    step: 'nope',
+    min: 'low',
+    max: 'high',
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox')
+
+    await userEvent.click(input)
+    await userEvent.keyboard('{ArrowUp}')
+    await expect(input).toHaveValue('5')
+
+    await userEvent.keyboard('{PageDown}')
+    await expect(input).toHaveValue('5')
+
+    await userEvent.keyboard('{Home}')
+    await expect(input).toHaveValue('5')
+
+    await userEvent.keyboard('{End}')
+    await expect(input).toHaveValue('5')
+  },
+}
+
 /** When negative values should be accepted but no specific lower bound is needed, use `allowNegative` instead of a synthetic `min`. The minus sign becomes typeable as the first character.<br />
  * This prop is exclusive to `type="number"` — TypeScript will reject it on any other type.
  */
