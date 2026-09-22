@@ -2,11 +2,20 @@ import type { ComponentProps } from 'react'
 
 type NumericAttributeValue = ComponentProps<'input'>['min']
 
-export type NumericConstraintIssue = {
+type NumericAttributeIssue = {
   prop: 'step' | 'min' | 'max'
   value: Exclude<NumericAttributeValue, undefined>
   reason: 'invalid-number' | 'non-positive-step'
 }
+
+type NumericRangeIssue = {
+  prop: 'range'
+  min: Exclude<NumericAttributeValue, undefined>
+  max: Exclude<NumericAttributeValue, undefined>
+  reason: 'min-greater-than-max'
+}
+
+export type NumericConstraintIssue = NumericAttributeIssue | NumericRangeIssue
 
 export type ParsedNumericConstraints = {
   /**
@@ -42,6 +51,26 @@ export const parseNumericConstraints = ({
   if (parsedMin.issue) issues.push(parsedMin.issue)
   if (parsedMax.issue) issues.push(parsedMax.issue)
 
+  if (
+    parsedMin.value !== undefined &&
+    parsedMax.value !== undefined &&
+    parsedMin.value > parsedMax.value
+  ) {
+    issues.push({
+      prop: 'range',
+      min: min ?? parsedMin.value,
+      max: max ?? parsedMax.value,
+      reason: 'min-greater-than-max',
+    })
+
+    return {
+      step: parsedStep.value,
+      min: undefined,
+      max: undefined,
+      issues,
+    }
+  }
+
   return {
     step: parsedStep.value,
     min: parsedMin.value,
@@ -50,16 +79,18 @@ export const parseNumericConstraints = ({
   }
 }
 
-export const formatNumericConstraintWarning = ({
-  prop,
-  value,
-  reason,
-}: NumericConstraintIssue) => {
-  if (reason === 'non-positive-step') {
-    return `Input: \`${prop}=${formatPropValue(value)}\` was ignored because numeric stepping requires a positive finite value. Use a positive number or \`step="any"\` to disable Arrow/Page stepping.`
+export const formatNumericConstraintWarning = (
+  issue: NumericConstraintIssue,
+) => {
+  if (issue.reason === 'min-greater-than-max') {
+    return `Input: \`min=${formatPropValue(issue.min)}\` and \`max=${formatPropValue(issue.max)}\` were ignored because \`min\` is greater than \`max\`.`
   }
 
-  return `Input: \`${prop}=${formatPropValue(value)}\` was ignored because it is not a finite number.`
+  if (issue.reason === 'non-positive-step') {
+    return `Input: \`${issue.prop}=${formatPropValue(issue.value)}\` was ignored because numeric stepping requires a positive finite value. Use a positive number or \`step="any"\` to disable Arrow/Page stepping.`
+  }
+
+  return `Input: \`${issue.prop}=${formatPropValue(issue.value)}\` was ignored because it is not a finite number.`
 }
 
 const parseStep = (
@@ -83,9 +114,9 @@ const parseStep = (
 }
 
 const parseFiniteNumericAttribute = (
-  prop: NumericConstraintIssue['prop'],
+  prop: NumericAttributeIssue['prop'],
   value: NumericAttributeValue | undefined,
-): { value: number | undefined; issue?: NumericConstraintIssue } => {
+): { value: number | undefined; issue?: NumericAttributeIssue } => {
   if (value === undefined) return { value: undefined }
 
   const parsed = parseFiniteNumber(value)

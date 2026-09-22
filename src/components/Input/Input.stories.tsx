@@ -267,6 +267,34 @@ export const TypeNumberInvalidConstraints: Story = {
   },
 }
 
+/**
+ * A contradictory range (`min > max`) is ignored as a set. Incremental stepping
+ * still works, but Home/End do not jump to invalid bounds.
+ */
+export const TypeNumberInvalidRange: Story = {
+  args: {
+    type: 'number',
+    defaultValue: '7',
+    step: 1,
+    min: 10,
+    max: 5,
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const input = canvas.getByRole('textbox')
+
+    await userEvent.click(input)
+    await userEvent.keyboard('{ArrowUp}')
+    await expect(input).toHaveValue('8')
+
+    await userEvent.keyboard('{Home}')
+    await expect(input).toHaveValue('8')
+
+    await userEvent.keyboard('{End}')
+    await expect(input).toHaveValue('8')
+  },
+}
+
 /** When negative values should be accepted but no specific lower bound is needed, use `allowNegative` instead of a synthetic `min`. The minus sign becomes typeable as the first character.<br />
  * This prop is exclusive to `type="number"` — TypeScript will reject it on any other type.
  */

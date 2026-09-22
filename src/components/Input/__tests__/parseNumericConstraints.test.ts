@@ -120,6 +120,40 @@ test('rejects hexadecimal-looking strings instead of using Number coercion', () 
   })
 })
 
+test('treats min greater than max as an invalid constraint set', () => {
+  expect(parseNumericConstraints({ step: 2, min: 10, max: 5 })).toEqual({
+    step: 2,
+    min: undefined,
+    max: undefined,
+    issues: [
+      {
+        prop: 'range',
+        min: 10,
+        max: 5,
+        reason: 'min-greater-than-max',
+      },
+    ],
+  })
+})
+
+test('allows min equal to max', () => {
+  expect(parseNumericConstraints({ min: 10, max: '10' })).toEqual({
+    step: 1,
+    min: 10,
+    max: 10,
+    issues: [],
+  })
+})
+
+test('does not report range issues when one bound is already invalid', () => {
+  expect(parseNumericConstraints({ min: 'high', max: 5 })).toEqual({
+    step: 1,
+    min: undefined,
+    max: 5,
+    issues: [{ prop: 'min', value: 'high', reason: 'invalid-number' }],
+  })
+})
+
 test('formats constraint warnings for dev output', () => {
   expect(
     formatNumericConstraintWarning({
@@ -138,4 +172,15 @@ test('formats constraint warnings for dev output', () => {
       reason: 'invalid-number',
     }),
   ).toBe('Input: `min="low"` was ignored because it is not a finite number.')
+
+  expect(
+    formatNumericConstraintWarning({
+      prop: 'range',
+      min: '10',
+      max: 5,
+      reason: 'min-greater-than-max',
+    }),
+  ).toBe(
+    'Input: `min="10"` and `max={5}` were ignored because `min` is greater than `max`.',
+  )
 })
