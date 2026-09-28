@@ -65,9 +65,24 @@ export const TypeNumber: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const input = canvas.getByRole('textbox')
+    const htmlInput = input as HTMLInputElement
 
     await userEvent.type(input, 'abc123xyz', { delay: 100 })
     await expect(input).toHaveValue('123')
+
+    await userEvent.clear(input)
+    await userEvent.type(input, '1234')
+    htmlInput.setSelectionRange(2, 2)
+    await userEvent.keyboard('9')
+    await expect(input).toHaveValue('12934')
+    await expect(htmlInput.selectionStart).toBe(3)
+    await expect(htmlInput.selectionEnd).toBe(3)
+
+    htmlInput.setSelectionRange(2, 2)
+    await userEvent.keyboard('a')
+    await expect(input).toHaveValue('12934')
+    await expect(htmlInput.selectionStart).toBe(2)
+    await expect(htmlInput.selectionEnd).toBe(2)
   },
 }
 
@@ -161,6 +176,10 @@ export const TypeNumberWithConstraints: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const input = canvas.getByRole('textbox')
+
+    await expect(input).toHaveAttribute('min', '-600')
+    await expect(input).toHaveAttribute('max', '2400')
+    await expect(input).toHaveAttribute('step', '100')
 
     await userEvent.click(input)
     await userEvent.keyboard('{ArrowUp}')

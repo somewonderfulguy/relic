@@ -5,6 +5,11 @@ export type SanitizeNumericValueOptions = {
   allowNegative?: boolean
 }
 
+export type SanitizedNumericSelectionOptions = SanitizeNumericValueOptions & {
+  selectionStart: number | null
+  selectionEnd: number | null
+}
+
 export const sanitizeNumericValue = (
   value: string,
   { inputMode, allowNegative }: SanitizeNumericValueOptions,
@@ -18,6 +23,26 @@ export const sanitizeNumericValue = (
       : unsigned.replace(/\D/g, '')
 
   return isNegative ? `-${cleaned}` : cleaned
+}
+
+export const getSanitizedNumericSelection = (
+  value: string,
+  {
+    selectionStart,
+    selectionEnd,
+    ...options
+  }: SanitizedNumericSelectionOptions,
+) => {
+  if (selectionStart === null || selectionEnd === null) return null
+
+  return {
+    selectionStart: sanitizeNumericValue(
+      value.slice(0, selectionStart),
+      options,
+    ).length,
+    selectionEnd: sanitizeNumericValue(value.slice(0, selectionEnd), options)
+      .length,
+  }
 }
 
 const sanitizeDecimal = (value: string) => {

@@ -1,4 +1,4 @@
-import { sanitizeNumericValue } from '../utils'
+import { getSanitizedNumericSelection, sanitizeNumericValue } from '../utils'
 
 test('integer mode: strips non-digit characters', () => {
   expect(sanitizeNumericValue('abc123', { inputMode: 'numeric' })).toBe('123')
@@ -87,4 +87,34 @@ test('allowNegative=false is equivalent to omitting the option', () => {
   expect(
     sanitizeNumericValue('-42', { inputMode: 'numeric', allowNegative: false }),
   ).toBe('42')
+})
+
+test('maps collapsed numeric selection after stripping invalid characters', () => {
+  expect(
+    getSanitizedNumericSelection('12a34', {
+      inputMode: 'numeric',
+      selectionStart: 3,
+      selectionEnd: 3,
+    }),
+  ).toEqual({ selectionStart: 2, selectionEnd: 2 })
+})
+
+test('maps ranged numeric selection after stripping invalid characters', () => {
+  expect(
+    getSanitizedNumericSelection('a12b34', {
+      inputMode: 'numeric',
+      selectionStart: 1,
+      selectionEnd: 5,
+    }),
+  ).toEqual({ selectionStart: 0, selectionEnd: 3 })
+})
+
+test('maps decimal selection after collapsing repeated separators', () => {
+  expect(
+    getSanitizedNumericSelection('1.2.3', {
+      inputMode: 'decimal',
+      selectionStart: 4,
+      selectionEnd: 5,
+    }),
+  ).toEqual({ selectionStart: 3, selectionEnd: 4 })
 })

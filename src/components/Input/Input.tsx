@@ -10,6 +10,7 @@ import {
   parseNumericConstraints,
   normalizeNumericValue,
   sanitizeNumericValue,
+  getSanitizedNumericSelection,
   handleNumericStepping,
 } from './utils'
 
@@ -102,16 +103,37 @@ export const Input = ({
       type={isNumberInput ? 'text' : type}
       inputMode={resolvedInputMode}
       pattern={resolvedPattern}
+      min={min}
+      max={max}
+      step={step}
       className={cn(className)}
       onChange={(event) => {
         if (isNumberInput) {
-          event.currentTarget.value = sanitizeNumericValue(
-            event.currentTarget.value,
-            {
-              inputMode: resolvedInputMode,
-              allowNegative: resolvedAllowNegative,
-            },
-          )
+          const value = event.currentTarget.value
+          const numericOptions = {
+            inputMode: resolvedInputMode,
+            allowNegative: resolvedAllowNegative,
+          }
+          const sanitizedValue = sanitizeNumericValue(value, numericOptions)
+
+          if (sanitizedValue !== value) {
+            const selectionDirection = event.currentTarget.selectionDirection
+            const selection = getSanitizedNumericSelection(value, {
+              ...numericOptions,
+              selectionStart: event.currentTarget.selectionStart,
+              selectionEnd: event.currentTarget.selectionEnd,
+            })
+
+            event.currentTarget.value = sanitizedValue
+
+            if (selection) {
+              event.currentTarget.setSelectionRange(
+                selection.selectionStart,
+                selection.selectionEnd,
+                selectionDirection ?? undefined,
+              )
+            }
+          }
         }
         onChange?.(event)
       }}
