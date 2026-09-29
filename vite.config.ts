@@ -23,6 +23,15 @@ export default defineConfig({
     },
   },
   test: {
+    coverage: {
+      provider: 'v8',
+      include: ['src/**/*.{ts,tsx}'],
+      exclude: [
+        'src/**/*.stories.{ts,tsx}',
+        'src/**/__tests__/**',
+        'src/**/*.d.ts',
+      ],
+    },
     projects: [
       {
         test: {
